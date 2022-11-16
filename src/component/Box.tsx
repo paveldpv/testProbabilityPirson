@@ -7,16 +7,16 @@ import closeBox from './../source/closeBox.png'
 type Props = {}
 
 export default function Box({number,open,secretNumber}: IBox) {
-  const [openB,SetOpenB]=useState(open)
+ // const [openB,SetOpenB]=useState(open)
   useEffect(()=>{
     
     
   },[])
 
   return (
-    <div onClick={()=>SetOpenB(true)}
-     className='box' data-key={openB?number:secretNumber}>
-      <img src={openB?openBox:closeBox} alt="" />
+    <div 
+     className='box' data-key={!open?number:secretNumber}>
+      <img src={open?openBox:closeBox} alt="" />
     </div>
   )
 }

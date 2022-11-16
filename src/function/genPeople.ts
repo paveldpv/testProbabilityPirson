@@ -8,5 +8,6 @@ export const generationPeople :(n:number)=>IPeople[]=(n:number)=>{
     }
     res.push(people)
   }
-return res.sort((el)=>(Math.random()-0.5))
+
+return res
 }

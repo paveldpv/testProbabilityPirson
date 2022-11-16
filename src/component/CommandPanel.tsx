@@ -2,12 +2,14 @@ import React from 'react'
 import Regulations from './Regulations'
 
 type Props = {
-  step:()=>void
+  step:()=>void,
+  counter:number
 }
 
-export default function ComandPanel({step}: Props) {
+export default function ComandPanel({step,counter}: Props) {
   return (
-    <div className=' h-1/6 w-1/3 bg-slate-400  flex flex-col gap-2'>
+    <div className='flex flex-row'>
+      <div className=' h-1/6 w-1/3 bg-slate-400  flex flex-col gap-2'>
       <button onClick={step}
       className='p-2 font-bold text-xs rounded-sm bg-green-900  border-2 border-black border-solid mx-6 my-2'>
         NEXT  STEP
@@ -16,6 +18,12 @@ export default function ComandPanel({step}: Props) {
       <button className='p-2 font-bold text-xs rounded-sm bg-green-900  border-2 border-black border-solid mx-6'>
         AUTO PLAY
       </button>
+      </div>
+    <div>
+      <div>INFO</div>
+      <hr />
+      <div>{counter}</div>
+    </div>
     </div>
   )
 }

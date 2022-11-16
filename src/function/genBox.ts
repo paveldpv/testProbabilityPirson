@@ -1,10 +1,15 @@
 import { IBox } from "../interface/Interface"
 
-export const generateBox:(n:number)=>IBox[]=(n:number)=>{
-  const arrRandomSecretNumber= Array(n).fill(Number).map(() => Math.round(Math.random() * n))
+export const generateBox:(n:number)=>IBox[]=(n:number)=>{  
+   let arr :number[]=[]
+   for (let i = 1; i <= n; i++) {
+    arr.push(i)
+   }
+  let arrRandomSecretNumber=arr.sort(() => Math.random() - 0.5)
+   console.log(arrRandomSecretNumber.sort());
    
   let res =[]
-  for (let i = 0; i < n; i++) {
+  for (let i = 1; i <= n; i++) {
     let box:IBox={
       open:false,
       number:i,
@@ -12,5 +17,5 @@ export const generateBox:(n:number)=>IBox[]=(n:number)=>{
     }
     res.push(box)
   }
-return res.sort(()=>Math.random()-0.5)
+return res
 }

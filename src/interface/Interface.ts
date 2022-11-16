@@ -1,12 +1,12 @@
 export interface IPeople{
-  number?:number,
+  number:number,
   positionX?:number,
   positionY?:number 
 }
 
 export interface IBox {
   open:boolean,
-  number:number,
+  number?:number,
   secretNumber:number,
   positionX?:number,
   positionY?:number 

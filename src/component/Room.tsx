@@ -14,7 +14,7 @@ export default function Room({boxes,currentHuman}: Props) {
   
   return (
     <div className='w-1/3 border-2 border-solid border-gray-800 rounded-md gridHundred hover:scale-125 hover:bg-zinc-600 transition-all delay-75'>
-      {currentHuman&&<People  number={currentHuman?.number}/>}
+      {currentHuman&&<People winner={currentHuman.winner} number={currentHuman?.number} checkNumber={currentHuman.checkNumber}/>}
       {boxes.map(box=>{
         return(<Box key={box.number} open={box.open} number={box.number} secretNumber={box.secretNumber}/> )
       })}

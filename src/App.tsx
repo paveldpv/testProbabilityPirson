@@ -14,6 +14,24 @@ import { useEffect, useState } from "react";
 
 function App() {  
 
+function timer(ms:number) {
+ return new Promise(res => setTimeout(res, ms));
+}
+const checkedBox:(people:IPeople,box:IBox[],counter:number)=>void=(people,box,counter=0)=>{
+  if(people.number==box[people.checkNumber-1].secretNumber){
+    people.winner=true
+    setWaitingRoom([...waitingRoom,people])    
+  }
+  else{      
+    
+    people.checkNumber=box[people.checkNumber-1].secretNumber        
+    console.log(`people`,people);
+    
+    counter++
+    counter!=50?checkedBox(people,box,counter):setWaitingRoom([...waitingRoom,people])
+  }
+}
+
   const [people,setPeople]=useState<IPeople[]>([])
   const [boxes,setBoxes]=useState<IBox[]>([])
   const [currentHuman,setCurrentHuman]=useState<IPeople>()
@@ -23,20 +41,29 @@ function App() {
   useEffect(()=>{
     setPeople(generationPeople(100));
     setBoxes(generateBox(100))
+    console.log(`generate`);
+    
   },[])
 
+
 const step:(()=>void)=()=>{
-  let human = people.shift()    
-  setCurrentHuman(human)
-  let temp = boxes
-  if(human){
-    temp[human.number-1].open=true
-    if(human.number==temp[human.number].secretNumber){
-      setWaitingRoom([...waitingRoom,human])
-    }
+  let currentHuman = people.shift()    
+  setCurrentHuman(currentHuman)
+  let currentBox = boxes
+  if(currentHuman){
+    checkedBox(currentHuman,boxes,0)
+    // for (let i = 0; i < 50; i++) {
+    //   let humanNumber=currentHuman.number
+      
+    // }
+    // temp[human.number-1].open=true
+    // if(human.number==temp[human.number].secretNumber){
+    //   setWaitingRoom([...waitingRoom,human])
+    // }
+
   }
-  console.log(temp);  
-  setBoxes(temp)
+  // console.log(currentBox);  
+  // setBoxes(currentBox)
   
 }
 

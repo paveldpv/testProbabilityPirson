@@ -6,7 +6,7 @@ export const generateBox:(n:number)=>IBox[]=(n:number)=>{
     arr.push(i)
    }
   let arrRandomSecretNumber=arr.sort(() => Math.random() - 0.5)
-   console.log(arrRandomSecretNumber.sort());
+   //console.log(arrRandomSecretNumber.sort());
    
   let res =[]
   for (let i = 1; i <= n; i++) {

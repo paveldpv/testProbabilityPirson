@@ -1,5 +1,7 @@
 export interface IPeople{
   number:number,
+  winner:boolean,
+  checkNumber:number,
   positionX?:number,
   positionY?:number 
 }

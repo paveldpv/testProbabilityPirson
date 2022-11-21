@@ -19,3 +19,4 @@ export const generateBox:(n:number)=>IBox[]=(n:number)=>{
   }
 return res
 }
+export const boxes = generateBox(100)

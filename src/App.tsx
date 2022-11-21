@@ -17,18 +17,47 @@ function App() {
 function timer(ms:number) {
  return new Promise(res => setTimeout(res, ms));
 }
+
 const checkedBox:(people:IPeople,box:IBox[],counter:number)=>void=(people,box,counter=0)=>{
-  if(people.number==box[people.checkNumber-1].secretNumber){
-    people.winner=true
-    setWaitingRoom([...waitingRoom,people])    
+
+  let openBox = boxes[people.checkNumber-1]
+  openBox.open=true  
+  setBoxes(boxes.map((box,index)=>{
+    if(index==people.checkNumber-1){
+      return({...box,open:true})
+    }
+    else{
+      return({...box})
+    }    
+  }))
+  if(people.number==box[people.checkNumber-1].secretNumber){       
+    setTimeout(() => {
+    people.winner=true    
+    setWaitingRoom([...waitingRoom,people])        
+    setBoxes(boxes.map(box=>({...box,open:false})))
+    }, 1000);
+    
   }
-  else{      
-    
+  else{          
     people.checkNumber=box[people.checkNumber-1].secretNumber        
-    console.log(`people`,people);
-    
+    //console.log(`people`,people);    
     counter++
-    counter!=50?checkedBox(people,box,counter):setWaitingRoom([...waitingRoom,people])
+    setCounter(counter)
+    //counter!=50?checkedBox(people,box,counter):setWaitingRoom([...waitingRoom,people])
+    if(counter!=50){
+      setTimeout(() => {
+        checkedBox(people,box,counter)
+      }, 500);
+     // checkedBox(people,box,counter)
+    }
+    else{
+      setTimeout(() => {
+      setWaitingRoom([...waitingRoom,people])
+      setBoxes(boxes.map(box=>({...box,open:false})))
+      }, 500);
+      // setWaitingRoom([...waitingRoom,people])
+      // setBoxes(boxes.map(box=>({...box,open:false})))
+    }
   }
 }
 
@@ -38,9 +67,9 @@ const checkedBox:(people:IPeople,box:IBox[],counter:number)=>void=(people,box,co
   const [counter,setCounter]=useState(0)
   const [waitingRoom,setWaitingRoom]=useState<IPeople[]>([])
 
-  useEffect(()=>{
+  useEffect(()=>{    
     setPeople(generationPeople(100));
-    setBoxes(generateBox(100))
+    setBoxes(generateBox(100)  )
     console.log(`generate`);
     
   },[])
@@ -51,19 +80,9 @@ const step:(()=>void)=()=>{
   setCurrentHuman(currentHuman)
   let currentBox = boxes
   if(currentHuman){
-    checkedBox(currentHuman,boxes,0)
-    // for (let i = 0; i < 50; i++) {
-    //   let humanNumber=currentHuman.number
-      
-    // }
-    // temp[human.number-1].open=true
-    // if(human.number==temp[human.number].secretNumber){
-    //   setWaitingRoom([...waitingRoom,human])
-    // }
-
+    checkedBox(currentHuman,boxes,0)  
   }
-  // console.log(currentBox);  
-  // setBoxes(currentBox)
+  
   
 }
 

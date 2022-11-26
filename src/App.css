@@ -14,7 +14,7 @@
 }
 
 .box{
-
+  position: absolute;
 }
 .box::before{
   content: attr(data-key);

@@ -10,6 +10,6 @@ export interface IBox {
   open:boolean,
   number?:number,
   secretNumber:number,
-  positionX?:number,
-  positionY?:number 
+  positionX:number,
+  positionY:number 
 }

@@ -1,21 +1,26 @@
 import React, { useEffect, useState } from 'react'
-
-
-import { IBox } from '../interface/Interface'
 import openBox from './../source/openBox.png'
 import closeBox from './../source/closeBox.png'
+
+import { IBox } from '../interface/Interface'
+
+
 type Props = {}
 
-export default function Box({number,open,secretNumber}: IBox) {
- // const [openB,SetOpenB]=useState(open)
-  useEffect(()=>{
-    
-    
-  },[])
-
+export default function Box({number,open,secretNumber,positionX,positionY}: IBox) {
+  let style={
+    width:`62.5px`,
+    height:`50px`,
+    left:positionX + `px`,
+    top:positionY+`px`
+  }
+//  console.log(`positionX`,positionX);
+ //console.log(`positionY`,positionY);
+ 
+  
   return (
-    <div 
-     className='box' data-key={!open?number:secretNumber}>
+    <div style={style}
+     className={`box`} data-key={!open?number:secretNumber}>
       <img src={open?openBox:closeBox} alt="" />
     </div>
   )

@@ -17,6 +17,7 @@ import './App.css'
 function App() {  
  
   const checkedBox=async(people:IPeople,box:IBox[],counter:number,speed:number,randomArr?:number[]):Promise<void>=>{
+    await new Promise(res=>{
    // let t:number=randomArr?randomArr.shift()||1:people.checkNumber-1
     let openBox = box[people.checkNumber-1]
     setCurrentHuman(prev=>(prev&&{...prev,positionX:openBox.positionX,positionY:openBox.positionY}))
@@ -32,30 +33,34 @@ function App() {
 
     if(people.number===openBox.secretNumber){       
       setTimeout(() => {
-      people.winner=true    
-      setWaitingRoom([...waitingRoom,people])          
-      setBoxes(boxes.map(box=>({...box,open:false})))}, speed);   
+    res(people.winner=true  )    
+    res(setWaitingRoom([...waitingRoom,people]  ) )         
+    res(setBoxes(boxes.map(box=>({...box,open:false})))) 
+    
+    }, speed);   
        
     }
     else{ 
       
       let nextBox:number=randomArr?randomArr.shift()||1:openBox.secretNumber      
-      console.log(nextBox);                
+      //console.log(nextBox);                
       people.checkNumber=nextBox
       counter++
       setCounter(counter)     
       if(counter!=50){
         setTimeout(() => {
-          checkedBox(people,box,counter,speed,randomArr)
+         res(checkedBox(people,box,counter,speed,randomArr)) 
         }, speed);      
       }
       else{
         setTimeout(() => {
-        setWaitingRoom([...waitingRoom,people])
-          
-        setBoxes(boxes.map(box=>({...box,open:false})))}, speed);        
+      res(setWaitingRoom([...waitingRoom,people])  )          
+      res(setBoxes(boxes.map(box=>({...box,open:false})))) 
+      return
+     }, speed);        
       }
-    }
+      
+    }})
   }
 
   const [people,setPeople]             = useState<IPeople[]>([])
@@ -77,20 +82,35 @@ function App() {
 
   
  const step=async():Promise<void> =>{
+  
     let currentHuman = people.shift()    
     setCurrentHuman(currentHuman)
     if(!currentHuman){ alert(`end game(=)`)} 
     else if(strategy){
       setCounter(0)
-     await checkedBox(currentHuman,boxes,0,speed)
+   await checkedBox(currentHuman,boxes,0,speed)   
+     
     }
     else{
       setCounter(0)
-     await checkedBox(currentHuman,boxes,0,speed,stepNoStrategy(50))
+     checkedBox(currentHuman,boxes,0,speed,stepNoStrategy(50))
     }
+    
+  
+    
   }
+
  const autoStep=async():Promise<void>=>{
-  setInterval(await step,speed)
+ // await setInterval(await step)
+  for (let i = 0; i < 100; i++) {
+    await new Promise(res=>{
+      res(step().then(()=>console.log(i)))
+      
+    })
+    //await step()
+   
+    
+  }
  }
 
 

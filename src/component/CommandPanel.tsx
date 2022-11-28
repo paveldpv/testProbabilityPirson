@@ -7,10 +7,11 @@ type Props = {
   strategy?:boolean,
   dispatchStrategy:React.DispatchWithoutAction,
   speed:number,
-  setSpeed:React.Dispatch<React.SetStateAction<number>>
+  setSpeed:React.Dispatch<React.SetStateAction<number>>,
+  autoStep:()=>void
 }
 
-export default function ComandPanel({step,counter,dispatchStrategy,strategy,setSpeed,speed}: Props) {
+export default function ComandPanel({step,counter,dispatchStrategy,strategy,setSpeed,speed,autoStep}: Props) {
   
   
 
@@ -23,7 +24,8 @@ export default function ComandPanel({step,counter,dispatchStrategy,strategy,setS
       </button>
       <input type="text" placeholder='speed' className='mx-6 p-2 rounded-sm' 
       value={speed} onChange={(e=>{setSpeed(parseInt(e.target.value))})}/>
-      <button className='p-2 font-bold text-xs rounded-sm bg-green-900  border-2 border-black border-solid mx-6'>
+      <button onClick={autoStep}
+      className='p-2 font-bold text-xs rounded-sm bg-green-900  border-2 border-black border-solid mx-6'>
         AUTO PLAY
       </button>
       </div>

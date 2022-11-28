@@ -1,3 +1,5 @@
+import { useEffect, useState,useReducer } from "react";
+
 import CommandPanel from "./component/CommandPanel";
 import FieldStart from './component/FieldStart'
 import Room from "./component/Room";
@@ -6,52 +8,52 @@ import TotalScore from "./component/TotalScore";
 
 import {generationPeople}  from './function/genPeople'
 import {generateBox} from './function/genBox'
-import './App.css'
+import {stepNoStrategy} from "./function/genRandomArr";
 
 import { IPeople,IBox } from "./interface/Interface";
 
-import { useEffect, useState,useReducer } from "react";
+import './App.css'
 
 function App() {  
-
-
-  const checkedBox=(people:IPeople,box:IBox[],counter:number,speed:number,strategy:boolean):void=>{
-    
+ 
+  const checkedBox=async(people:IPeople,box:IBox[],counter:number,speed:number,randomArr?:number[]):Promise<void>=>{
+   // let t:number=randomArr?randomArr.shift()||1:people.checkNumber-1
     let openBox = box[people.checkNumber-1]
     setCurrentHuman(prev=>(prev&&{...prev,positionX:openBox.positionX,positionY:openBox.positionY}))
     openBox.open=true 
 
-    setBoxes(boxes.map((box,index)=>{
-      if(index==people.checkNumber-1){
-        return({...box,open:true})    }
-      else{
-        return({...box})
-      }    
-    }))
+    // setBoxes(boxes.map((box,index)=>{
+    //   if(index==people.checkNumber-1){
+    //     return({...box,open:true})    }
+    //   else{
+    //     return({...box})
+    //   }    
+    // }))
 
-    if(people.number==box[people.checkNumber-1].secretNumber){       
+    if(people.number===openBox.secretNumber){       
       setTimeout(() => {
       people.winner=true    
-      setWaitingRoom([...waitingRoom,people])    
-         
-      setBoxes(boxes.map(box=>({...box,open:false})))
-      }, speed);    
+      setWaitingRoom([...waitingRoom,people])          
+      setBoxes(boxes.map(box=>({...box,open:false})))}, speed);   
+       
     }
-    else{          
-      people.checkNumber=box[people.checkNumber-1].secretNumber      
+    else{ 
+      
+      let nextBox:number=randomArr?randomArr.shift()||1:openBox.secretNumber      
+      console.log(nextBox);                
+      people.checkNumber=nextBox
       counter++
       setCounter(counter)     
       if(counter!=50){
         setTimeout(() => {
-          checkedBox(people,box,counter,speed,strategy)
+          checkedBox(people,box,counter,speed,randomArr)
         }, speed);      
       }
       else{
         setTimeout(() => {
         setWaitingRoom([...waitingRoom,people])
           
-        setBoxes(boxes.map(box=>({...box,open:false})))
-        }, 500);        
+        setBoxes(boxes.map(box=>({...box,open:false})))}, speed);        
       }
     }
   }
@@ -63,31 +65,45 @@ function App() {
   const [waitingRoom,setWaitingRoom]   = useState<IPeople[]>([])
   const [strategy, dispatchStrategy]   = useReducer(prev=>!prev,true)
   const [speed,setSpeed]               = useState(500)
+ // const [randomArr,setRandomArr]       = useState<Number[]>([])
 
   useEffect(()=>{    
     setPeople(generationPeople(100));
-    setBoxes(generateBox(100))      
+    setBoxes(generateBox(100))    
+    //setRandomArr(stepNoStrategy(50))       
+    console.log(`generate Human and generate box`);      
   },[])
 
-  
- const step:(()=>void)=()=>{
-  let currentHuman = people.shift()    
-  setCurrentHuman(currentHuman)
-  if(!currentHuman){ alert(`end game(=)`)} 
-  else if(strategy){
-    setCounter(0)
-    checkedBox(currentHuman,boxes,0,speed,strategy)
-  }
-  else{
-    console.log(`no strategy`);
-  }
-}
 
+  
+ const step=async():Promise<void> =>{
+    let currentHuman = people.shift()    
+    setCurrentHuman(currentHuman)
+    if(!currentHuman){ alert(`end game(=)`)} 
+    else if(strategy){
+      setCounter(0)
+     await checkedBox(currentHuman,boxes,0,speed)
+    }
+    else{
+      setCounter(0)
+     await checkedBox(currentHuman,boxes,0,speed,stepNoStrategy(50))
+    }
+  }
+ const autoStep=async():Promise<void>=>{
+  setInterval(await step,speed)
+ }
 
 
   return (
     <div className=" bg-slate-400 w-full h-screen overflow-hidden">
-      <CommandPanel step={step} counter={counter} dispatchStrategy={dispatchStrategy} strategy={strategy} speed={speed} setSpeed={setSpeed}/>    
+      <CommandPanel
+       autoStep={autoStep}
+       step={step} 
+       counter={counter} 
+       dispatchStrategy={dispatchStrategy}
+       strategy={strategy}
+       speed={speed} 
+       setSpeed={setSpeed}/>    
       <div className="h-4/6 w-full bg-slate-500 flex gap-2 ">
         <FieldStart people={people}/>
         <Room  boxes={boxes} currentHuman={currentHuman} />

@@ -14,9 +14,7 @@ export default function Box({number,open,secretNumber,positionX,positionY}: IBox
     left:positionX + `px`,
     top:positionY+`px`
   }
-//  console.log(`positionX`,positionX);
- //console.log(`positionY`,positionY);
- 
+
   
   return (
     <div style={style}

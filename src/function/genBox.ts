@@ -1,7 +1,7 @@
 import { IBox } from "../interface/Interface"
 
 export const generateBox:(n:number)=>IBox[]=(n:number)=>{  
-  let width:number = 60
+  let width:number = 62
   let height:number=60
    let arr :number[]=[]
    for (let i = 1; i <= n; i++) {
@@ -12,9 +12,7 @@ export const generateBox:(n:number)=>IBox[]=(n:number)=>{
   let res =[]
   let currentPositionY = 0
   let currentPositionX = 0
-  for (let i = 1; i <= n; i++) {    
-     
-   
+  for (let i = 1; i <= n; i++) {       
     let box:IBox={
       open:false,
       number:i,

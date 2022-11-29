@@ -22,8 +22,8 @@ export default function ComandPanel({step,counter,dispatchStrategy,strategy,setS
       className='p-2 font-bold text-xs rounded-sm bg-green-900  border-2 border-black border-solid mx-6 my-2'>
         NEXT  STEP
       </button>
-      <input type="text" placeholder='speed' className='mx-6 p-2 rounded-sm' 
-      value={speed} onChange={(e=>{setSpeed(parseInt(e.target.value))})}/>
+      <input type="text" placeholder='speed (min speed 80ms)' className='mx-6 p-2 rounded-sm' 
+       onChange={(e=>{setSpeed(parseInt(e.target.value)||150)})}/>
       <button onClick={autoStep}
       className='p-2 font-bold text-xs rounded-sm bg-green-900  border-2 border-black border-solid mx-6'>
         AUTO PLAY

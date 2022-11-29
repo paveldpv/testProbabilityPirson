@@ -4,7 +4,7 @@ import CommandPanel from "./component/CommandPanel";
 import FieldStart from './component/FieldStart'
 import Room from "./component/Room";
 import WaitingRoom from "./component/WaitingRoom";
-import TotalScore from "./component/TotalScore";
+
 
 import {generationPeople}  from './function/genPeople'
 import {generateBox} from './function/genBox'
@@ -18,52 +18,36 @@ function App() {
  
   const checkedBox=async(people:IPeople,box:IBox[],counter:number,speed:number,randomArr?:number[]):Promise<void>=>{
     await new Promise(res=>{
-   // let t:number=randomArr?randomArr.shift()||1:people.checkNumber-1
+   
     let openBox = box[people.checkNumber-1]
     setCurrentHuman(prev=>(prev&&{...prev,positionX:openBox.positionX,positionY:openBox.positionY}))
     openBox.open=true 
-
-    // setBoxes(boxes.map((box,index)=>{
-    //   if(index==people.checkNumber-1){
-    //     return({...box,open:true})    }
-    //   else{
-    //     return({...box})
-    //   }    
-    // }))
+    setBoxes(prev=>[...prev,openBox])
 
     if(people.number===openBox.secretNumber){       
         setTimeout(() => {
-      res(people.winner=true)    
-      //res(setWaitingRoom([...waitingRoom,people]) )     
+          res(people.winner=true)         
           waitingRoom.push(people)
-      res(setBoxes(boxes.map(box=>({...box,open:false}))))     
+          res(setBoxes(boxes.map(box=>({...box,open:false}))))     
       }, speed);   
        
     }
-    else{ 
-      
-      let nextBox:number=randomArr?randomArr.shift()||1:openBox.secretNumber      
-      //console.log(nextBox);                
-      people.checkNumber=nextBox
-      counter++
-      setCounter(counter)     
+    else{       
+      let nextBox:number=randomArr?randomArr.shift()||1:openBox.secretNumber                     
+      people.checkNumber=nextBox      
+      setCounter(counter++)     
       if(counter!=50){
         setTimeout(() => {
-         res(checkedBox(people,box,counter,speed,randomArr)) 
+           res(checkedBox(people,box,counter,speed,randomArr)) 
         }, speed);      
       }
       else{
-        setTimeout(() => {
-
-      //res(setWaitingRoom([...waitingRoom,people])  ) 
-      // let t =[...waitingRoom,people]
-      // setWaitingRoom(t)       
-      waitingRoom.push(people)
-      res(setBoxes(boxes.map(box=>({...box,open:false})))) 
-      return
-     }, speed);        
-      }
-      
+        setTimeout(() => { 
+          waitingRoom.push(people)
+          res(setBoxes(boxes.map(box=>({...box,open:false})))) 
+          return
+        }, speed);        
+      }      
     }})
   }
 
@@ -73,27 +57,24 @@ function App() {
   const [counter,setCounter]           = useState(0)
   const [waitingRoom,setWaitingRoom]   = useState<IPeople[]>([])
   const [strategy, dispatchStrategy]   = useReducer(prev=>!prev,true)
-  const [speed,setSpeed]               = useState(500)
- // const [randomArr,setRandomArr]       = useState<Number[]>([])
+  const [speed,setSpeed]               = useState(150)
+ 
 
   useEffect(()=>{    
     setPeople(generationPeople(100));
-    setBoxes(generateBox(100))    
-    //setRandomArr(stepNoStrategy(50))       
+    setBoxes(generateBox(100))           
     console.log(`generate Human and generate box`);      
   },[])
 
 
   
- const step=async():Promise<void> =>{
-  
+ const step=async():Promise<void> =>{  
     let currentHuman = people.shift()    
     setCurrentHuman(currentHuman)
     if(!currentHuman){ alert(`end game(=)`)} 
     else if(strategy){
       setCounter(0)
-      await checkedBox(currentHuman,boxes,0,speed)   
-     
+      await checkedBox(currentHuman,boxes,0,speed)        
     }
     else{
       setCounter(0)
@@ -103,14 +84,10 @@ function App() {
   }
 
  const autoStep=async():Promise<void>=>{
- // await setInterval(await step)
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i <= 100; i++) {
     await new Promise(res=>{
       res(step().then(()=>console.log(i)))      
-    })
-    //await step()
-   
-    
+    })    
   }
  }
 
@@ -129,8 +106,7 @@ function App() {
         <FieldStart people={people}/>
         <Room  boxes={boxes} currentHuman={currentHuman} />
       <WaitingRoom waitingPeople={waitingRoom} />
-      </div>    
-      <TotalScore/>   
+      </div>            
     </div>
   );
 }

@@ -6,11 +6,9 @@ export const generationPeople :(n:number)=>IPeople[]=(n:number)=>{
     let people:IPeople={
       number:i,
       winner:false,
-      checkNumber:i
-      
+      checkNumber:i      
     }
     res.push(people)
   }
-
 return res
 }

@@ -32,12 +32,12 @@ function App() {
     // }))
 
     if(people.number===openBox.secretNumber){       
-      setTimeout(() => {
-    res(people.winner=true  )    
-    res(setWaitingRoom([...waitingRoom,people]  ) )         
-    res(setBoxes(boxes.map(box=>({...box,open:false})))) 
-    
-    }, speed);   
+        setTimeout(() => {
+      res(people.winner=true)    
+      //res(setWaitingRoom([...waitingRoom,people]) )     
+          waitingRoom.push(people)
+      res(setBoxes(boxes.map(box=>({...box,open:false}))))     
+      }, speed);   
        
     }
     else{ 
@@ -54,7 +54,11 @@ function App() {
       }
       else{
         setTimeout(() => {
-      res(setWaitingRoom([...waitingRoom,people])  )          
+
+      //res(setWaitingRoom([...waitingRoom,people])  ) 
+      // let t =[...waitingRoom,people]
+      // setWaitingRoom(t)       
+      waitingRoom.push(people)
       res(setBoxes(boxes.map(box=>({...box,open:false})))) 
       return
      }, speed);        
@@ -88,15 +92,13 @@ function App() {
     if(!currentHuman){ alert(`end game(=)`)} 
     else if(strategy){
       setCounter(0)
-   await checkedBox(currentHuman,boxes,0,speed)   
+      await checkedBox(currentHuman,boxes,0,speed)   
      
     }
     else{
       setCounter(0)
-     checkedBox(currentHuman,boxes,0,speed,stepNoStrategy(50))
-    }
-    
-  
+     await checkedBox(currentHuman,boxes,0,speed,stepNoStrategy(50))
+    }  
     
   }
 
@@ -104,8 +106,7 @@ function App() {
  // await setInterval(await step)
   for (let i = 0; i < 100; i++) {
     await new Promise(res=>{
-      res(step().then(()=>console.log(i)))
-      
+      res(step().then(()=>console.log(i)))      
     })
     //await step()
    
